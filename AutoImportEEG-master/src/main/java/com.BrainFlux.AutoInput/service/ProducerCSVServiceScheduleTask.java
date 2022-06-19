@@ -5,7 +5,6 @@ import com.BrainFlux.AutoInput.domain.ImportCSVEvent;
 import com.BrainFlux.AutoInput.domain.RowData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
-
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
@@ -35,7 +34,7 @@ import java.util.Map;
  */
 @Service
 @EnableKafka
-public class ProducerCSVService {
+public class ProducerCSVServiceScheduleTask {
 
     @Autowired(required = false)
     private KafkaTemplate<Integer,String> kafkaTemplate;
@@ -45,7 +44,7 @@ public class ProducerCSVService {
     @Autowired(required = false)
     private AutoStreaming autoStreaming;
 
-    public void importCSVEvent(String dir) throws IOException, InterruptedException {
+    public void importCSVEvent(String dir,String scheduleTaskID) throws IOException, InterruptedException {
         ObjectMapper objectMapper=new ObjectMapper();
 
         List<File> fileList= autoStreaming.getAllCSV(dir);
@@ -181,7 +180,7 @@ public class ProducerCSVService {
         CSVHeader.put("fileName", "PUH-2015-015_09ar.csv");
         CSVHeader.put("arType", "ar");
         CSVHeader.put("fileUUID", "0");
-        RowData rowData=new RowData("finish",0,null);
+        RowData rowData=new RowData(scheduleTaskID,0,null);
         ImportCSVEvent importCSVEvent = new ImportCSVEvent(1,CSVHeader,rowData);
         Integer partition= importCSVEvent.getEventId();
         String value = objectMapper.writeValueAsString(importCSVEvent.getRowData());

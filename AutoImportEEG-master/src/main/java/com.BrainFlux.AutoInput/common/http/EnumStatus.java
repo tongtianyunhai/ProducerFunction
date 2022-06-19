@@ -1,4 +1,4 @@
-package com.BrainFlux.AutoInput.config;
+package com.BrainFlux.AutoInput.common.http;
 
 /**
  * @Author：whl

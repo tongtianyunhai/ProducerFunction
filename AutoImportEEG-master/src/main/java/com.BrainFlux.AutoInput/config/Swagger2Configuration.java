@@ -1,6 +1,7 @@
 package com.BrainFlux.AutoInput.config;
 
 
+import com.BrainFlux.AutoInput.common.http.EnumStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
