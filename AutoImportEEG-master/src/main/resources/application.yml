@@ -1,9 +1,11 @@
 topic: import-CSV-events
 partitions: 3
-replicas: 3
+replicas: 1
 SUCCESSFILES: ./testSuccess
 FAILEDFILES: ./testFalilure
 timeoutSleep: 30000
+server:
+  port: 8050
 ---
 spring:
   profiles:
@@ -38,3 +40,10 @@ spring:
     admin:
       properties:
         bootstrap.servers: localhost:9092
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/umpc?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password:

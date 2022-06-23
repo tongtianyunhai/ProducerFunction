@@ -2,15 +2,13 @@ package com.BrainFlux.AutoInput.controller;
 import com.BrainFlux.AutoInput.common.http.AxiosResult;
 import com.BrainFlux.AutoInput.common.page.PageResult;
 import com.BrainFlux.AutoInput.controller.base.BaseController;
+import com.BrainFlux.AutoInput.domain.EditTask;
 import com.BrainFlux.AutoInput.domain.ScheduleTask;
 import com.BrainFlux.AutoInput.domain.Vo.DirVo;
 import com.BrainFlux.AutoInput.domain.Vo.ScheduleTaskVo;
 import com.BrainFlux.AutoInput.domain.Vo.ServerInfoVo;
 import com.BrainFlux.AutoInput.domain.criteria.ScheduleTaskQueryCriteria;
-import com.BrainFlux.AutoInput.service.IScheduleTaskService;
-import com.BrainFlux.AutoInput.service.ProducerCSVService;
-import com.BrainFlux.AutoInput.service.ProducerCSVServiceScheduleTask;
-import com.BrainFlux.AutoInput.service.StartScheduleTask;
+import com.BrainFlux.AutoInput.service.*;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +36,10 @@ public class KafkaProducerController extends BaseController {
     private IScheduleTaskService iScheduleTaskService;
     @Autowired
     private ProducerCSVServiceScheduleTask producerCSVServiceScheduleTask;
+//    @Autowired
+//    private StartScheduleTask startScheduleTask;
     @Autowired
-    private StartScheduleTask startScheduleTask;
+    private IEditTaskService iEditTaskService;
     // url for import new csv
     @PostMapping("importCSV")
     public AxiosResult<Boolean> importCSVEvent(@RequestBody DirVo dirVo) throws IOException, InterruptedException {
@@ -118,12 +118,12 @@ public class KafkaProducerController extends BaseController {
         PageResult<ScheduleTaskVo>list=iScheduleTaskService.checkAllActivedScheduleTaskByQuery(scheduleTaskQueryCriteria);
         return AxiosResult.success(list);
     }
-    @GetMapping("test")
-    public AxiosResult<Boolean> test()  {
-        ScheduledTaskRegistrar scheduledTaskRegistrar=new ScheduledTaskRegistrar();
-        startScheduleTask.configureTasks(scheduledTaskRegistrar);
-        return AxiosResult.success();
-    }
+//    @GetMapping("test")
+//    public AxiosResult<Boolean> test()  {
+//        ScheduledTaskRegistrar scheduledTaskRegistrar=new ScheduledTaskRegistrar();
+//        startScheduleTask.configureTasks(scheduledTaskRegistrar);
+//        return AxiosResult.success();
+//    }
     @PostMapping("editScheduleTaskByID")
     public AxiosResult<Boolean> editScheduleTaskByTID(@RequestBody ScheduleTask scheduleTask)  {
         ScheduleTaskQueryCriteria scheduleTaskQueryCriteria=new ScheduleTaskQueryCriteria();
@@ -150,6 +150,25 @@ public class KafkaProducerController extends BaseController {
         scheduleTaskQueryCriteria.setTid(scheduleTask.getTid());
         scheduleTaskQueryCriteria.setTaskStatus("0");
         iScheduleTaskService.editScheduleTaskStatusByEid(scheduleTaskQueryCriteria);
+        return AxiosResult.success();
+    }
+
+    @PostMapping("deleteTaskTypeByID")
+    public AxiosResult<Boolean> deleteTaskTypeByID(@RequestBody EditTask editTask)  {
+        iEditTaskService.deleteTaskTypeById(editTask);
+        return AxiosResult.success();
+    }
+    @GetMapping("checkAllTaskType")
+    public AxiosResult<List<EditTask>> checkAllTaskType()  {
+        List<EditTask> list=iEditTaskService.selectTaskType();
+        return AxiosResult.success(list);
+    }
+    @PostMapping("addTaskType")
+    public AxiosResult<Boolean> addTaskType(@RequestBody EditTask editTask) {
+        UUID uuid=UUID.randomUUID();
+        editTask.setTid(uuid.toString());
+        editTask.setStatus(1);
+        iEditTaskService.addScheduleTask(editTask);
         return AxiosResult.success();
     }
 }

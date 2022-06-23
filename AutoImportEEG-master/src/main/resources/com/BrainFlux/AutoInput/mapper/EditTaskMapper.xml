@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.BrainFlux.AutoInput.mapper.EditTaskMapper">
+    <select id="selectAllTaskType" resultType="com.BrainFlux.AutoInput.domain.EditTask">
+        select * from edit_task
+        <where>
+            status = 1
+        </where>
+    </select>
+    <insert id="addScheduleTask" keyProperty="tid" useGeneratedKeys="false">
+        insert into umpc.edit_task(tid, task_type,status,addition_one,addition_two)
+        values (#{tid}, #{taskType}, #{status},#{additionOne},#{additionTwo})
+    </insert>
+    <update id="deleteTaskTypeByTid">
+        update umpc.edit_task
+        <set>
+                status = 0
+        </set>
+        <where>
+            task_type = #{taskType}
+        </where>
+    </update>
+</mapper>

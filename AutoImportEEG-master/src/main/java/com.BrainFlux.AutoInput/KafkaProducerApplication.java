@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @MapperScan(value = {"com.BrainFlux.AutoInput.mapper"})
-@EnableScheduling
+//@EnableScheduling
 public class KafkaProducerApplication {
 
 	public static void main(String[] args) {
